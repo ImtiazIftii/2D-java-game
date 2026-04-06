@@ -34,6 +34,7 @@ public class GamePanel extends JPanel implements Runnable{
 	TileManager tileM = new TileManager(this);
 	KeyHandler keyH = new KeyHandler(); //creating an object of KeyHandler to use it in our game
 	Thread gameThread; //this is for creating timesense/fps in our game
+	public CollisionChecker cChecker = new CollisionChecker(this);
 	public Player player =new Player(this,keyH); 	//Set Player's default position
 	
 

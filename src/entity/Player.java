@@ -4,6 +4,7 @@ import main.KeyHandler;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
@@ -26,6 +27,12 @@ public class Player extends Entity{
 		
 		screenX = gp.screenWidth/2 -(gp.tileSize/2);
 		screenY = gp.screenHeight/2 -(gp.tileSize/2); //character is displayed at the center of the screen
+		
+		solidArea = new Rectangle(); //we are creating a rectangle with x,y,height and width values
+		solidArea.x = 8;         //instead of 0,0 we use this values which causes the collision to be a bit smaller
+		solidArea.y = 16;
+		solidArea.height = 32;
+		solidArea.height = 32;
 		
 		setDefaultValues();
 		getPlayerImage();
@@ -65,19 +72,42 @@ public class Player extends Entity{
 	if(keyH.upPressed == true || keyH.downPressed == true || keyH.leftPressed == true || keyH.rightPressed == true) {	//so the player moves only when a key is pressed	
 		if(keyH.upPressed == true) {
 			direction ="up";
-			worldY -= speed;  //the top left corner is x0 y0 so to increase y or go down we need to plus y; in this case we are upping y ; so we minus the speed
+			  //the top left corner is x0 y0 so to increase y or go down we need to plus y; in this case we are upping y ; so we minus the speed
 		}                             //here it moves by 4 pixels;
 		else if(keyH.downPressed == true) {
 			direction ="down";
-			worldY += speed;
+			
 		}
 		else if(keyH.leftPressed == true) {
 			direction ="left";
-			worldX -= speed;
+			
 		}
 		else if(keyH.rightPressed == true) {
 			direction ="right";
-			worldX += speed;
+			
+		}
+		
+		//Check tile Collision
+		collisionOn = false;
+		gp.cChecker.checkTile(this); //"this" inside the method means passing the Player class it will see player class as entity
+		
+		//If collision is false, PLAYER CAN MOVE ; only when the tiles are not solid
+		if(collisionOn == false) {
+			
+			switch(direction) {
+			case "up":
+				worldY -= speed;
+				break;
+			case "down":
+				worldY += speed;
+				break;
+			case "left":
+				worldX -= speed;
+				break;
+			case "right":
+				worldX += speed;
+				break;
+			}
 		}
 		
 		spriteCounter++;        //this variable is defined in the entity class
