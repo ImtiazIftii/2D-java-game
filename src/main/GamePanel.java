@@ -8,6 +8,7 @@ import java.awt.Graphics2D;
 import javax.swing.JPanel;
 
 import entity.Player;
+import object.SuperObject;
 import tile.TileManager;
 
 public class GamePanel extends JPanel implements Runnable{
@@ -35,7 +36,10 @@ public class GamePanel extends JPanel implements Runnable{
 	KeyHandler keyH = new KeyHandler(); //creating an object of KeyHandler to use it in our game
 	Thread gameThread; //this is for creating timesense/fps in our game
 	public CollisionChecker cChecker = new CollisionChecker(this);
+	public AssetSetter aSetter = new AssetSetter(this); //pass this class through the constructor of AssetSetter
 	public Player player =new Player(this,keyH); 	//Set Player's default position
+	public SuperObject obj[] = new SuperObject[10]; //this 10 means we can display upto 10 objects same time 
+	//displaying too many objects can slow down the game
 	
 
 	
@@ -48,6 +52,12 @@ public class GamePanel extends JPanel implements Runnable{
 		this.addKeyListener(keyH); //so it can listen to the key inputs
 		this.setFocusable(true);
 	}
+	
+	public void setupGame() { //we want our objects placed before the game starts so we add this object in the main class before the game starts
+		
+		aSetter.setObject(); //called the method of AssetSetter class
+	}
+	
 	
 	public void startGameThread() {
 		
@@ -138,9 +148,17 @@ public class GamePanel extends JPanel implements Runnable{
 		super.paintComponent(g);
 		
 		Graphics2D g2 =(Graphics2D)g; 
-		
+		//Tile
 		tileM.draw(g2);  //we draw tile first and then player
 		
+		//Object
+		for(int i = 0; i < obj.length; i++) {  //scanning our superObject array
+			if(obj[i]!=null) {  //if there is any object inside the array we draw it
+				obj[i].draw(g2, this);
+			}
+		}
+		
+		//Player
 		player.draw(g2);
 		
 		g2.dispose(); //this is a good practice to save memory
