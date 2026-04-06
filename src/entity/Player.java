@@ -16,20 +16,27 @@ public class Player extends Entity{
 	GamePanel gp;
 	KeyHandler keyH;
 	
+	public final int screenX; //this indicates where we draw the player; we also want our background to move with player as our map is bigger
+	public final int screenY; //final variables mean these variables do not change throughout the game
+	
 	public Player(GamePanel gp,KeyHandler keyH) {
 		
 		this.gp =gp;
 		this.keyH =keyH;
+		
+		screenX = gp.screenWidth/2 -(gp.tileSize/2);
+		screenY = gp.screenHeight/2 -(gp.tileSize/2); //character is displayed at the center of the screen
 		
 		setDefaultValues();
 		getPlayerImage();
 	}
 	public void setDefaultValues() {
 		
-		x = 100;
-		y = 100;
+		worldX = gp.tileSize * 23;  //this is players position on the world map
+		worldY = gp.tileSize * 21;
 		speed = 4;
 		direction ="down";  //doesn't matter what i use here; this is the default direction
+	
 	}
 	
 	public void getPlayerImage() {
@@ -54,22 +61,23 @@ public class Player extends Entity{
 	
 	
 	public void update() { 
+		
 	if(keyH.upPressed == true || keyH.downPressed == true || keyH.leftPressed == true || keyH.rightPressed == true) {	//so the player moves only when a key is pressed	
 		if(keyH.upPressed == true) {
 			direction ="up";
-			y -= speed;  //the top left corner is x0 y0 so to increase y or go down we need to plus y; in this case we are upping y ; so we minus the speed
+			worldY -= speed;  //the top left corner is x0 y0 so to increase y or go down we need to plus y; in this case we are upping y ; so we minus the speed
 		}                             //here it moves by 4 pixels;
 		else if(keyH.downPressed == true) {
 			direction ="down";
-			y += speed;
+			worldY += speed;
 		}
 		else if(keyH.leftPressed == true) {
 			direction ="left";
-			x -= speed;
+			worldX -= speed;
 		}
 		else if(keyH.rightPressed == true) {
 			direction ="right";
-			x += speed;
+			worldX += speed;
 		}
 		
 		spriteCounter++;        //this variable is defined in the entity class
@@ -122,7 +130,7 @@ public class Player extends Entity{
 			}
 			break;
 		}
-		g2.drawImage(image, x, y, gp.tileSize, gp.tileSize, null);  //basically creates an image with the passed paramters
+		g2.drawImage(image, screenX, screenY, gp.tileSize, gp.tileSize, null);  //basically creates an image with the passed paramters
 		
 //		g2.setColor(Color.white);		
 //		g2.fillRect(x , y,gp.tileSize, gp.tileSize);  //draw a rectangle on screen with a specific color; for the time being we are using this a player character
