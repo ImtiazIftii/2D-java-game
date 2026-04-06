@@ -7,13 +7,15 @@ import java.awt.Graphics2D;
 
 import javax.swing.JPanel;
 
+import entity.Player;
+
 public class GamePanel extends JPanel implements Runnable{
 	
 	//Screen Settings
 	final int originalTileSize = 16; //16x16 tile
 	final int scale =3;
 	
-	final int tileSize = originalTileSize*scale; //48x48 tile
+	public final int tileSize = originalTileSize*scale; //48x48 tile
 	final int maxScreenCol =16;
 	final int maxScreenRow =12;
 	final int screenWidth =tileSize * maxScreenCol; //768 pixels
@@ -24,6 +26,7 @@ public class GamePanel extends JPanel implements Runnable{
 	
 	KeyHandler keyH = new KeyHandler(); //creating an object of KeyHandler to use it in our game
 	Thread gameThread; //this is for creating timesense/fps in our game
+	Player player =new Player(this,keyH);
 	
 	//Set Player's default position
 	
@@ -82,7 +85,7 @@ public class GamePanel extends JPanel implements Runnable{
 		}
 	}
 	
-	//this is one game looping method(sleep method or smth)
+//this is another game looping method(sleep method or smth)
 //	public void run() {
 //		
 //		double drawInterval = 1000000000/FPS;  //using nanoSec as calc unit we draw the screen every 0.0166s to generate 60 fps
@@ -121,18 +124,7 @@ public class GamePanel extends JPanel implements Runnable{
 
 	
 	public void update() {
-		if(keyH.upPressed == true) {
-			playerY -= playerSpeed;  //the top left corner is x0 y0 so to increase y or go down we need to plus y; in this case we are upping y ; so we minus the speed
-		}                             //here it moves by 4 pixels;
-		else if(keyH.downPressed == true) {
-			playerY += playerSpeed;
-		}
-		else if(keyH.leftPressed == true) {
-			playerX -= playerSpeed;
-		}
-		else if(keyH.rightPressed == true) {
-			playerX += playerSpeed;
-		}
+		player.update();
 	}
 	
 	public void paintComponent(Graphics g) {       //this graphics is my pencil that ill use to draw
@@ -141,9 +133,7 @@ public class GamePanel extends JPanel implements Runnable{
 		
 		Graphics2D g2 =(Graphics2D)g; 
 		
-		g2.setColor(Color.white);
-		
-		g2.fillRect(playerX,playerY,tileSize,tileSize);  //draw a rectangle on screen with a specific color; for the time being we are using this a player character
+		player.draw(g2);
 		
 		g2.dispose(); //this is a good practice to save memory
 		
