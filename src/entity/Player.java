@@ -54,7 +54,7 @@ public class Player extends Entity{
 	
 	
 	public void update() { 
-		if(keyH.upPressed == true || keyH.downPressed == true || keyH.leftPressed == true || keyH.rightPressed == true) {		
+	if(keyH.upPressed == true || keyH.downPressed == true || keyH.leftPressed == true || keyH.rightPressed == true) {	//so the player moves only when a key is pressed	
 		if(keyH.upPressed == true) {
 			direction ="up";
 			y -= speed;  //the top left corner is x0 y0 so to increase y or go down we need to plus y; in this case we are upping y ; so we minus the speed
@@ -82,7 +82,7 @@ public class Player extends Entity{
 			}
 			spriteCounter = 0;
 		}
-		}
+	  }
 	}
 	public void draw(Graphics2D g2) {
 		
