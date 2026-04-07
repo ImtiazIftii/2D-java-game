@@ -26,17 +26,23 @@ public class GamePanel extends JPanel implements Runnable{
 	//WORLD SETTINGS
 	public final int maxWorldCol = 50; //our new world map which is 50x50
 	public final int maxWorldRow = 50;
-	public final int worldWidth = tileSize * maxWorldCol;
-	public final int worldHeight = tileSize * maxWorldRow;
+	
 	
 	//FPS
 	int FPS =60;
 	
+	//SYSTEM
 	TileManager tileM = new TileManager(this);
 	KeyHandler keyH = new KeyHandler(); //creating an object of KeyHandler to use it in our game
-	Thread gameThread; //this is for creating timesense/fps in our game
+	Sound music = new Sound();
+	Sound se = new Sound();
 	public CollisionChecker cChecker = new CollisionChecker(this);
 	public AssetSetter aSetter = new AssetSetter(this); //pass this class through the constructor of AssetSetter
+	public UI ui = new UI(this);
+	Thread gameThread; //this is for creating timesense/fps in our game
+	
+	
+	//ENTITY AND OBJECT
 	public Player player =new Player(this,keyH); 	//Set Player's default position
 	public SuperObject obj[] = new SuperObject[10]; //this 10 means we can display upto 10 objects same time 
 	//displaying too many objects can slow down the game
@@ -56,6 +62,8 @@ public class GamePanel extends JPanel implements Runnable{
 	public void setupGame() { //we want our objects placed before the game starts so we add this object in the main class before the game starts
 		
 		aSetter.setObject(); //called the method of AssetSetter class
+		
+		playMusic(0);
 	}
 	
 	
@@ -93,7 +101,7 @@ public class GamePanel extends JPanel implements Runnable{
 			}
 			
 			if(timer >= 1000000000) {
-				System.out.println("FPS: " + drawCount);
+				//System.out.println("FPS: " + drawCount); //the FPS counter
 				drawCount =0;
 				timer =0;
 			}
@@ -146,8 +154,8 @@ public class GamePanel extends JPanel implements Runnable{
 	public void paintComponent(Graphics g) {       //this graphics is my pencil that ill use to draw
 		//built in java method to draw things on jPanel
 		super.paintComponent(g);
+		Graphics2D g2 =(Graphics2D)g;
 		
-		Graphics2D g2 =(Graphics2D)g; 
 		//Tile
 		tileM.draw(g2);  //we draw tile first and then player
 		
@@ -161,7 +169,27 @@ public class GamePanel extends JPanel implements Runnable{
 		//Player
 		player.draw(g2);
 		
+		//UI  (UI should come after player so it doesnt get drawn over)
+		ui.draw(g2);
+		
 		g2.dispose(); //this is a good practice to save memory
 		
+	}
+	
+	public void playMusic(int i) {
+		
+		music.setFile(i);
+		music.play();
+		music.loop();
+	}
+	
+	public void stopMusic() {
+		
+		music.stop();
+	}
+	public void playSE(int i) {
+		
+		se.setFile(i);
+		se.play();
 	}
 }

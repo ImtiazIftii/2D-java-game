@@ -19,7 +19,7 @@ public class Player extends Entity{
 	
 	public final int screenX; //this indicates where we draw the player; we also want our background to move with player as our map is bigger
 	public final int screenY; //final variables mean these variables do not change throughout the game
-	int hasKey = 0; //indicates how many keys the player currently has
+	public int hasKey = 0; //indicates how many keys the player currently has
 	
 	
 	
@@ -144,20 +144,35 @@ public class Player extends Entity{
 			
 			switch(objectName) {
 			case"Key":
+				gp.playSE(1); //play the coin SoundEffect
 				hasKey++;
 				gp.obj[i] = null;
-				System.out.println("Key: "+hasKey);
+				gp.ui.showMessage("Obtained A Key!");
 				break;
 			case"Door":
 				if(hasKey > 0) {
+					gp.playSE(3);
 					gp.obj[i] = null;
 					hasKey --;
+					gp.ui.showMessage("The door is Opened!");
 				}
-				System.out.println("Key: "+hasKey);
+				else {
+					gp.ui.showMessage("You are out of Key SON");
+				}
 				break;
-			
-			
+			case"Boots":
+				gp.playSE(2);
+				speed += 1;
+				gp.obj[i] = null;
+				gp.ui.showMessage("Speed up!");
+				break;
+			case"Chest":
+				gp.ui.gameFinished = true;
+				gp.stopMusic();
+				gp.playSE(4);
+				break;
 			}
+			
 		}
 	}
 	
