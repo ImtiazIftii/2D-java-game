@@ -47,7 +47,7 @@ public class CollisionChecker {
 		case "left":
 			entityLeftCol = (entityLeftWorldX - entity.speed)/gp.tileSize;
 			tileNum1 = gp.tileM.mapTileNum[entityLeftCol][entityTopRow];
-			tileNum2 = gp.tileM.mapTileNum[entityRightCol][entityBottomRow];
+			tileNum2 = gp.tileM.mapTileNum[entityLeftCol][entityBottomRow];
 			if(gp.tileM.tile[tileNum1].collision == true || gp.tileM.tile[tileNum2].collision == true) {
 				entity.collisionOn = true;
 			}
@@ -63,4 +63,80 @@ public class CollisionChecker {
 		}
 		
 	}
+	public int checkObject(Entity entity, boolean player) {  //we check if player is hitting any object and if yes then sending the index of the object
+		
+		int index = 999;
+		
+		for(int i = 0; i < gp.obj.length; i++) {
+			
+			if(gp.obj[i]!=null) {
+				//Get entity's solid area position
+				entity.solidArea.x = entity.worldX + entity.solidArea.x;
+				entity.solidArea.y = entity.worldY + entity.solidArea.y;
+				
+				//Get the objects solid area position
+				gp.obj[i].solidArea.x = gp.obj[i].worldX + gp.obj[i].solidArea.x;  //we have entity's solidArea value as 0 because we are using the entire tile as solid
+				gp.obj[i].solidArea.y = gp.obj[i].worldY + gp.obj[i].solidArea.y; //the extra part is there just to make the code dynamic
+				//by this part we have entity and objects solid area position
+				//next we check the directions
+				
+				
+				switch(entity.direction) {
+				case "up":
+					entity.solidArea.y -= entity.speed;
+					if(entity.solidArea.intersects(gp.obj[i].solidArea)) {  //intersects is a method inside the rectangle class which checks collision
+						if(gp.obj[i].collision == true) {
+							entity.collisionOn = true;
+						}
+						if(player == true) {
+							index = i;          //we only need the index for players and not npcs; because only players should be able to interact with the boxes(not really sure) 
+						}
+					}
+					break;
+				case "down":
+					entity.solidArea.y +=entity.speed;
+					if(entity.solidArea.intersects(gp.obj[i].solidArea)) {  //intersects is a method inside the rectangle class which checks collision
+						if(gp.obj[i].collision == true) {
+							entity.collisionOn = true;
+						}
+						if(player == true) {
+							index = i;          //we only need the index for players and not npcs; because only players should be able to interact with the boxes(not really sure) 
+						}
+					}
+					break;
+				case "left":
+					entity.solidArea.x -= entity.speed;
+					if(entity.solidArea.intersects(gp.obj[i].solidArea)) {  //intersects is a method inside the rectangle class which checks collision
+						if(gp.obj[i].collision == true) {
+							entity.collisionOn = true;
+						}
+						if(player == true) {
+							index = i;          //we only need the index for players and not npcs; because only players should be able to interact with the boxes(not really sure) 
+						}
+					}
+					break;
+				case "right":
+					entity.solidArea.x += entity.speed;
+					if(entity.solidArea.intersects(gp.obj[i].solidArea)) {  //intersects is a method inside the rectangle class which checks collision
+						if(gp.obj[i].collision == true) {
+							entity.collisionOn = true;
+						}
+						if(player == true) {
+							index = i;          //we only need the index for players and not npcs; because only players should be able to interact with the boxes(not really sure) 
+						}
+					}
+					break;
+				}
+				//we reset these values after each check
+				entity.solidArea.x = entity.solidAreaDefaultX;
+				entity.solidArea.y = entity.solidAreaDefaultY;
+				
+				gp.obj[i].solidArea.x = gp.obj[i].solidAreaDefaultX;
+				gp.obj[i].solidArea.y = gp.obj[i].solidAreaDefaultY;
+			}
+		}
+		
+		return index;
+	}
+	
 }

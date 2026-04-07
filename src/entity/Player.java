@@ -19,6 +19,10 @@ public class Player extends Entity{
 	
 	public final int screenX; //this indicates where we draw the player; we also want our background to move with player as our map is bigger
 	public final int screenY; //final variables mean these variables do not change throughout the game
+	int hasKey = 0; //indicates how many keys the player currently has
+	
+	
+	
 	
 	public Player(GamePanel gp,KeyHandler keyH) {
 		
@@ -31,7 +35,9 @@ public class Player extends Entity{
 		solidArea = new Rectangle(); //we are creating a rectangle with x,y,height and width values
 		solidArea.x = 8;         //instead of 0,0 we use this values which causes the collision to be a bit smaller
 		solidArea.y = 16;
-		solidArea.height = 32;
+		solidAreaDefaultX = solidArea.x;
+		solidAreaDefaultY = solidArea.y;
+		solidArea.width = 32;
 		solidArea.height = 32;
 		
 		setDefaultValues();
@@ -91,6 +97,12 @@ public class Player extends Entity{
 		collisionOn = false;
 		gp.cChecker.checkTile(this); //"this" inside the method means passing the Player class it will see player class as entity
 		
+		//Check Object Collsion
+		int objIndex =gp.cChecker.checkObject(this, true);
+		pickUpObject(objIndex);
+		
+		
+		
 		//If collision is false, PLAYER CAN MOVE ; only when the tiles are not solid
 		if(collisionOn == false) {
 			
@@ -122,6 +134,34 @@ public class Player extends Entity{
 		}
 	  }
 	}
+	
+	
+	public void pickUpObject(int i) {
+		
+		if(i != 999) {     //this means we have touched an object *wink*
+			
+			String objectName = gp.obj[i].name; //imported objects name
+			
+			switch(objectName) {
+			case"Key":
+				hasKey++;
+				gp.obj[i] = null;
+				System.out.println("Key: "+hasKey);
+				break;
+			case"Door":
+				if(hasKey > 0) {
+					gp.obj[i] = null;
+					hasKey --;
+				}
+				System.out.println("Key: "+hasKey);
+				break;
+			
+			
+			}
+		}
+	}
+	
+	
 	public void draw(Graphics2D g2) {
 		
 		BufferedImage image = null;
